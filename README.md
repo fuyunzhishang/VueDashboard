@@ -2,7 +2,8 @@
 
 > 基于[vue-echarts-v3](https://github.com/xlsdg/vue-echarts-v3)的DashBoard Demo
 
-## 在线演示
+
+## [在线演示](http://splendorzhang.com/vue_dashboard/)
 ## Build Setup
 
 ``` bash
