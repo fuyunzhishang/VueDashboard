@@ -1,0 +1,293 @@
+<template>
+  <div>
+    <section class="section-wrap put-section-0">
+      <div class="section section-1">
+        <div class="title active">
+          <IEcharts id="LogicView" @ready="onReady" @click="onClick" :option="logicView()"></IEcharts>
+        </div>
+      </div>
+      <div class="section section-2">
+        <div class="title active">
+          <IEcharts id="annualQuantity" :option="annualQuantity()"></IEcharts>
+        </div>
+      </div>
+      <div class="section section-3">
+        <div class="title">
+          <IEcharts id="orderChart" class="orderChart" :option="orderOption()"></IEcharts>
+          <IEcharts id="orderRatio" class="orderRatio" :option="orderRatio()"></IEcharts>
+        </div>
+      </div>
+    </section>
+    <ul class="section-btn" style="display: none;">
+      <li class="on"></li>
+      <li class=""></li>
+      <li class=""></li>
+      <li class=""></li>
+      <li class=""></li>
+    </ul>
+  </div>
+</template>
+
+<script type="text/babel">
+import IEcharts from 'vue-echarts-v3/src/full.vue'
+import options from './assets/data.js'
+import china from './assets/china.json'
+export default {
+  name: 'view',
+  components: {
+    IEcharts
+  },
+  props: {
+  },
+  data: () => ({
+    orderOption: () => {
+      return options.options.orderOption
+    },
+    orderRatio: () => {
+      return options.options.orderRatio
+    },
+    annualQuantity: () => {
+      return options.options.annualQuantity
+    },
+    logicView: () => {
+      return options.options.logicView
+    },
+    loading: false,
+    jsonAllPerson: JSON.parse('[{"value":"99.48%(29914/30070)"},{"value":"99.98%(9828/9830)"},{"value":"98.88%(6619/6694)"},{"value":"97.77%(1973/2018)"},{"value":"100.00%(1094/1094)"},{"value":"100.00%(154/154)"}]'),
+  }),
+  mounted: function () {
+    //设置页高度
+    //$('.section-1, .section-2, .section-3, .section-4').css({height: $(document).height()})
+    //设置各图标宽度
+    var $screenBodyWidth = $(document).width();
+    var $screenBodyHeight = $(document).height() - 100;
+    $('section').css({ height: $screenBodyHeight + 100 })
+    $('.section-1').css({ height: $screenBodyHeight + 100 })
+    $('.section-2').css({ height: $screenBodyHeight + 100 })
+    // $('.section-3').css({height: $screenBodyHeight + 100})
+    $('#orderChart').css({ width: ($screenBodyWidth - 100) / 2, height: $screenBodyHeight })
+    $('#orderRatio').css({ width: ($screenBodyWidth - 100) / 2, height: $screenBodyHeight })
+    $('#annualQuantity').css({ width: $screenBodyWidth, height: $screenBodyHeight })
+    $('#LogicView').css({ width: $screenBodyWidth, height: $screenBodyHeight })
+    //此处引用：鼠标滚轮mousewheel插件
+    !function (a) { "function" == typeof define && define.amd ? define(["jquery"], a) : "object" == typeof exports ? module.exports = a : a(jQuery) }(function (a) { function b(b) { var g = b || window.event, h = i.call(arguments, 1), j = 0, l = 0, m = 0, n = 0, o = 0, p = 0; if (b = a.event.fix(g), b.type = "mousewheel", "detail" in g && (m = -1 * g.detail), "wheelDelta" in g && (m = g.wheelDelta), "wheelDeltaY" in g && (m = g.wheelDeltaY), "wheelDeltaX" in g && (l = -1 * g.wheelDeltaX), "axis" in g && g.axis === g.HORIZONTAL_AXIS && (l = -1 * m, m = 0), j = 0 === m ? l : m, "deltaY" in g && (m = -1 * g.deltaY, j = m), "deltaX" in g && (l = g.deltaX, 0 === m && (j = -1 * l)), 0 !== m || 0 !== l) { if (1 === g.deltaMode) { var q = a.data(this, "mousewheel-line-height"); j *= q, m *= q, l *= q } else if (2 === g.deltaMode) { var r = a.data(this, "mousewheel-page-height"); j *= r, m *= r, l *= r } if (n = Math.max(Math.abs(m), Math.abs(l)), (!f || f > n) && (f = n, d(g, n) && (f /= 40)), d(g, n) && (j /= 40, l /= 40, m /= 40), j = Math[j >= 1 ? "floor" : "ceil"](j / f), l = Math[l >= 1 ? "floor" : "ceil"](l / f), m = Math[m >= 1 ? "floor" : "ceil"](m / f), k.settings.normalizeOffset && this.getBoundingClientRect) { var s = this.getBoundingClientRect(); o = b.clientX - s.left, p = b.clientY - s.top } return b.deltaX = l, b.deltaY = m, b.deltaFactor = f, b.offsetX = o, b.offsetY = p, b.deltaMode = 0, h.unshift(b, j, l, m), e && clearTimeout(e), e = setTimeout(c, 200), (a.event.dispatch || a.event.handle).apply(this, h) } } function c() { f = null } function d(a, b) { return k.settings.adjustOldDeltas && "mousewheel" === a.type && b % 120 === 0 } var e, f, g = ["wheel", "mousewheel", "DOMMouseScroll", "MozMousePixelScroll"], h = "onwheel" in document || document.documentMode >= 9 ? ["wheel"] : ["mousewheel", "DomMouseScroll", "MozMousePixelScroll"], i = Array.prototype.slice; if (a.event.fixHooks) for (var j = g.length; j;) a.event.fixHooks[g[--j]] = a.event.mouseHooks; var k = a.event.special.mousewheel = { version: "3.1.12", setup: function () { if (this.addEventListener) for (var c = h.length; c;) this.addEventListener(h[--c], b, !1); else this.onmousewheel = b; a.data(this, "mousewheel-line-height", k.getLineHeight(this)), a.data(this, "mousewheel-page-height", k.getPageHeight(this)) }, teardown: function () { if (this.removeEventListener) for (var c = h.length; c;) this.removeEventListener(h[--c], b, !1); else this.onmousewheel = null; a.removeData(this, "mousewheel-line-height"), a.removeData(this, "mousewheel-page-height") }, getLineHeight: function (b) { var c = a(b), d = c["offsetParent" in a.fn ? "offsetParent" : "parent"](); return d.length || (d = a("body")), parseInt(d.css("fontSize"), 10) || parseInt(c.css("fontSize"), 10) || 16 }, getPageHeight: function (b) { return a(b).height() }, settings: { adjustOldDeltas: !0, normalizeOffset: !0 } }; a.fn.extend({ mousewheel: function (a) { return a ? this.bind("mousewheel", a) : this.trigger("mousewheel") }, unmousewheel: function (a) { return this.unbind("mousewheel", a) } }) });
+
+    $(function () {
+      var i = 0;
+      var $btn = $('.section-btn li'),
+        $wrap = $('.section-wrap'),
+        $arrow = $('.arrow');
+
+      /*当前页面赋值*/
+      function up() { i++; if (i == $btn.length) { i = 0 }; }
+      function down() { i--; if (i < 0) { i = $btn.length - 1 }; }
+
+      /*页面滑动*/
+      function run() {
+        $btn.eq(i).addClass('on').siblings().removeClass('on');
+        $wrap.attr("class", "section-wrap").addClass(function () { return "put-section-" + i; }).find('.section').eq(i).find('.title').addClass('active');
+      };
+
+      /*右侧按钮点击*/
+      $btn.each(function (index) {
+        $(this).click(function () {
+          i = index;
+          run();
+        })
+      });
+
+      /*翻页按钮点击*/
+      $arrow.one('click', go);
+      function go() {
+        up(); run();
+        setTimeout(function () { $arrow.one('click', go) }, 1000)
+      };
+
+      /*响应鼠标*/
+      $wrap.one('mousewheel', mouse_);
+      function mouse_(event) {
+        if (event.deltaY < 0) { up() }
+        else { down() }
+        run();
+        setTimeout(function () { $wrap.one('mousewheel', mouse_) }, 1000)
+      };
+
+      /*响应键盘上下键*/
+      $(document).one('keydown', k);
+      function k(event) {
+        var e = event || window.event;
+        var key = e.keyCode || e.which || e.charCode;
+        switch (key) {
+          case 38: down(); run();
+            break;
+          case 40: up(); run();
+            break;
+        };
+        setTimeout(function () { $(document).one('keydown', k) }, 1000);
+      }
+    });
+  },
+  computed: {
+
+  },
+  methods: {
+    formatter: function (params) {
+      return " " + this.jsonAllPerson[params.dataIndex].value;
+    },
+    doTest() {
+      console.log(this.orderRatio())
+    },
+    onReady(instance) {
+      IEcharts.registerMap('china', china)
+      console.log(instance);
+    },
+    onClick(event, instance, echarts) {
+      instance.clear()
+      instance.setOption(this.logicView())
+      console.log(arguments);
+    }
+  },
+  computed: {
+    registeMap() {
+      //注册地图
+      if (this.logicView()) {
+        IEcharts.registerMap()
+      }
+    }
+  }
+};
+</script>
+
+<style scoped>
+@import './assets/css/common.css';
+.echarts {
+  width: 100%;
+  height: 50%;
+  position: relative;
+  padding: 0px 50px;
+}
+
+.orderRatio {
+  display: inline-block;
+}
+
+.orderChart {
+  display: inline-block;
+}
+
+.section-wrap {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transition: transform 1s cubic-bezier(0.86, 0, 0.03, 1);
+  -webkit-transition: -webkit-transform 1s cubic-bezier(0.86, 0, 0.03, 1);
+}
+
+.section-wrap .section {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.section-wrap .section .title {
+  width: 100%;
+  position: absolute;
+  top: 50px;
+  color: #fff;
+  font-size: 2.4em;
+  text-align: center;
+}
+
+.section-wrap .section .title p {
+  padding: 0 4%;
+  opacity: 0;
+}
+
+.section-wrap .section .title.active .tit {
+  opacity: 1;
+  transform: translateY(-25px);
+  -webkit-transform: translateY(-25px);
+  transition: all 2s cubic-bezier(0.86, 0, 0.8, 1);
+  -webkit-transition: all 2s cubic-bezier(0.86, 0, 0.8, 1);
+}
+
+.put-section-0 {
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
+
+.put-section-1 {
+  transform: translateY(-100%);
+  -webkit-transform: translateY(-100%);
+}
+
+.put-section-2 {
+  transform: translateY(-200%);
+  -webkit-transform: translateY(-200%);
+}
+
+.put-section-3 {
+  transform: translateY(-300%);
+  -webkit-transform: translateY(-300%);
+}
+
+.put-section-4 {
+  transform: translateY(-400%);
+  -webkit-transform: translateY(-400%);
+}
+
+.section-btn {
+  width: 14px;
+  position: fixed;
+  right: 4%;
+  top: 50%;
+}
+
+.section-btn li {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  text-indent: -9999px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  margin-bottom: 12px;
+  background: #BD362F;
+  text-align: center;
+  color: #fff;
+  onsor: pointer;
+}
+
+.section-btn li.on {
+  background: #fff;
+}
+
+.arrow {
+  opacity: 1;
+  animation: arrow 3s cubic-bezier(0.5, 0, 0.1, 1) infinite;
+  -webkit-animation: arrow 3s cubic-bezier(0.5, 0, 0.1, 1) infinite;
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  line-height: 60px;
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+  border: 1px solid #fff;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.arrow:hover {
+  animation-play-state: paused;
+  -webkit-animation-play-state: paused;
+}
+</style>
