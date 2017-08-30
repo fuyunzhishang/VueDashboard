@@ -1,7 +1,8 @@
-# vue-dashboard
+# Vue-DashBoard
 
-> A Vue.js project
+> 基于[vue-echarts-v3](https://github.com/xlsdg/vue-echarts-v3)的DashBoard Demo
 
+## 在线演示
 ## Build Setup
 
 ``` bash
